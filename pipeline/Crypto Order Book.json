@@ -1,0 +1,36 @@
+{
+	"name": "Crypto Order Book",
+	"properties": {
+		"activities": [
+			{
+				"name": "Order  Book",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "OrderBook",
+						"type": "NotebookReference"
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "production",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": "Small",
+					"driverSize": "Small"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-03-06T07:37:08Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

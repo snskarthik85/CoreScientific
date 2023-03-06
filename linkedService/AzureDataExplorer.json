@@ -1,0 +1,27 @@
+{
+	"name": "AzureDataExplorer",
+	"type": "Microsoft.Synapse/workspaces/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataExplorer",
+		"typeProperties": {
+			"endpoint": "https://cryptodata.westus2.kusto.windows.net",
+			"tenant": "d9327d86-ac1d-494c-9b6c-74a58947ccc1",
+			"servicePrincipalId": "1e3e414d-ea2f-4ca2-9991-4fb1a55e179e",
+			"servicePrincipalKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "cryptosecret",
+				"secretVersion": "fb042bdd06a1452fa740748572afd2fc"
+			},
+			"database": "bitcoin"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
