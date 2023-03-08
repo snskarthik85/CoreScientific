@@ -252,21 +252,21 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "production",
+					"referenceName": "RunCluster",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
+					"driverMemory": "112g",
+					"driverCores": 16,
+					"executorMemory": "112g",
+					"executorCores": 16,
 					"numExecutors": 2,
 					"runAsWorkspaceSystemIdentity": false,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "df560dba-98fa-4de2-af1e-d6286cee199b"
+						"spark.autotune.trackingId": "9e34f0ea-87b1-4594-887f-77d4cc95d803"
 					}
 				},
 				"metadata": {
@@ -280,18 +280,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/97a22587-99c2-4a30-9550-c894beba641f/resourceGroups/CoreScientific/providers/Microsoft.Synapse/workspaces/cryptowork/bigDataPools/production",
-						"name": "production",
+						"id": "/subscriptions/97a22587-99c2-4a30-9550-c894beba641f/resourceGroups/CoreScientific/providers/Microsoft.Synapse/workspaces/cryptowork/bigDataPools/RunCluster",
+						"name": "RunCluster",
 						"type": "Spark",
-						"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/production",
+						"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/RunCluster",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.2",
-						"nodeCount": 3,
-						"cores": 4,
-						"memory": 28,
+						"nodeCount": 10,
+						"cores": 16,
+						"memory": 112,
 						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
