@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e610b103-aa4c-4b3e-99b8-57452da533a1"
+				"spark.autotune.trackingId": "33dd34c1-f81e-4507-83c0-3e660ecc1682"
 			}
 		},
 		"metadata": {
@@ -62,7 +62,7 @@
 					"from datetime import datetime\n",
 					"import json"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -80,7 +80,7 @@
 				"source": [
 					"coinbaseClient = cbp.PublicClient()"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -149,7 +149,7 @@
 					"    await SendEventsToHub()\n",
 					"    "
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -185,7 +185,7 @@
 					"    df = df.astype({\"Bid Price\": float, \"Bid Size\": float, \"Bid Amount\" : float, \"Ask Price\": float, \"Ask Size\": float, \"Ask Amount\" : float, \"BidTotal\" : float, \"AskTotal\" : float, \"BidCumSum\" : float, \"AskCumSum\" : float})\n",
 					"    await PushToEventHub(df)"
 				],
-				"execution_count": null
+				"execution_count": 7
 			}
 		]
 	}
