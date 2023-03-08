@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "cryptowork"
+		},
+		"cryptowork-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:cryptowork.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataExplorer_properties_typeProperties_tenant": {
+			"value": "d9327d86-ac1d-494c-9b6c-74a58947ccc1"
+		},
+		"AzureDataExplorer_properties_typeProperties_servicePrincipalId": {
+			"value": "1e3e414d-ea2f-4ca2-9991-4fb1a55e179e"
+		},
+		"AzureDataExplorer_properties_typeProperties_database": {
+			"value": "bitcoin"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://azurecryptokv.vault.azure.net/"
+		},
+		"cryptowork-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://cryptoaccount.dfs.core.windows.net"
+		}
+	}
+}

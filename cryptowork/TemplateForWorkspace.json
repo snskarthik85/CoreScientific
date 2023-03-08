@@ -1,0 +1,486 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "cryptowork"
+		},
+		"cryptowork-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'cryptowork-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:cryptowork.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataExplorer_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "d9327d86-ac1d-494c-9b6c-74a58947ccc1"
+		},
+		"AzureDataExplorer_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "1e3e414d-ea2f-4ca2-9991-4fb1a55e179e"
+		},
+		"AzureDataExplorer_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "bitcoin"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azurecryptokv.vault.azure.net/"
+		},
+		"cryptowork-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://cryptoaccount.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Crypto Order Book')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Order  Book",
+						"type": "SynapseNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 1,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebook": {
+								"referenceName": "OrderBook",
+								"type": "NotebookReference"
+							},
+							"snapshot": true,
+							"sparkPool": {
+								"referenceName": "production",
+								"type": "BigDataPoolReference"
+							},
+							"executorSize": "Small",
+							"conf": {
+								"spark.dynamicAllocation.enabled": null,
+								"spark.dynamicAllocation.minExecutors": null,
+								"spark.dynamicAllocation.maxExecutors": null
+							},
+							"driverSize": "Small",
+							"numExecutors": null
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-03-06T07:37:08Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/notebooks/OrderBook')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/production')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureDataExplorer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataExplorer",
+				"typeProperties": {
+					"endpoint": "https://cryptodata.westus2.kusto.windows.net",
+					"tenant": "[parameters('AzureDataExplorer_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('AzureDataExplorer_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "cryptosecret",
+						"secretVersion": "fb042bdd06a1452fa740748572afd2fc"
+					},
+					"database": "[parameters('AzureDataExplorer_properties_typeProperties_database')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/AzureKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureKeyVault')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/cryptowork-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('cryptowork-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/cryptowork-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('cryptowork-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Trigger Every minute')]",
+			"type": "Microsoft.Synapse/workspaces/triggers",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Crypto Order Book",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2023-03-05T07:34:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/Crypto Order Book')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/OrderBook')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "production",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "eed329ae-7d3b-4d43-b192-69bca71dd42f"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/97a22587-99c2-4a30-9550-c894beba641f/resourceGroups/CoreScientific/providers/Microsoft.Synapse/workspaces/cryptowork/bigDataPools/production",
+						"name": "production",
+						"type": "Spark",
+						"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/production",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.2",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"import coinbasepro as cbp\n",
+							"from notebookutils import mssparkutils\n",
+							"import asyncio\n",
+							"from azure.eventhub import EventData\n",
+							"from azure.eventhub.aio import EventHubProducerClient\n",
+							"from azure.identity import DefaultAzureCredential\n",
+							"import pandas as pd\n",
+							"from datetime import datetime\n",
+							"import json"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"coinbaseClient = cbp.PublicClient()"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"async def PushToEventHub(df):\n",
+							"    EVENT_HUB_CONNECTION_STR = mssparkutils.credentials.getSecret('azurecryptokv','EventHubconnectionString', 'AzureKeyVault')\n",
+							"    EVENT_HUB_NAME = \"cryptoeventhub\"\n",
+							"    \n",
+							"    async def SendEventsToHub():\n",
+							"      \n",
+							"        # Create a producer client to send messages to the event hub.\n",
+							"        producer = EventHubProducerClient.from_connection_string(\n",
+							"            conn_str=EVENT_HUB_CONNECTION_STR, eventhub_name=EVENT_HUB_NAME\n",
+							"        )\n",
+							"\n",
+							"        async with producer:\n",
+							"            # Create a batch.\n",
+							"            event_data_batch = await producer.create_batch()\n",
+							"\n",
+							"            for index, row in df.iterrows():\n",
+							"    \n",
+							"                json_obj = {\n",
+							"                    \"BidPrice\" : row['Bid Price'],\n",
+							"                    \"BidSize\" : row['Bid Size'],\n",
+							"                    \"BidAmount\" : row['Bid Amount'],\n",
+							"                    \"AskPrice\" : row['Ask Price'],\n",
+							"                    \"AskSize\" : row['Ask Size'],\n",
+							"                    \"AskAmount\" : row['Ask Amount'],\n",
+							"                    \"Product\": row['Product'],\n",
+							"                    \"BidTotal\": row['BidTotal'],\n",
+							"                    \"AskTotal\": row['AskTotal'],\n",
+							"                    \"PollTime\": row['PollTime'],\n",
+							"                    \"BidCumSum\": row['BidCumSum'],\n",
+							"                    \"AskCumSum\": row['AskCumSum']\n",
+							"                }\n",
+							"\n",
+							"                string = json.dumps(json_obj)\n",
+							"                \n",
+							"                print(string)\n",
+							"\n",
+							"                Event_data = EventData(body=string)\n",
+							"                \n",
+							"                Event_data.properties = {\n",
+							"                    \"Table\":\"CryptoOrderBookAsksBids\",\n",
+							"                    \"IngestionMappingReference\":\"CryptoOrderBookAsksBidsMapping\", \n",
+							"                    \"Format\":\"json\"\n",
+							"                    }\n",
+							"\n",
+							"                # Add events to the batch.\n",
+							"                event_data_batch.add(Event_data)\n",
+							"        \n",
+							"            # Send the batch of events to the event hub.\n",
+							"            await producer.send_batch(event_data_batch)\n",
+							"\n",
+							"    await SendEventsToHub()\n",
+							"    "
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"products = [\"BTC-USD\", \"ETH-USD\"]\n",
+							"polltime = datetime.utcnow().strftime(\"%X\")\n",
+							"for product in products:\n",
+							"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
+							"    sparkDF = spark.createDataFrame(order_book) \n",
+							"    bids = pd.DataFrame(order_book['bids'])\n",
+							"    asks = pd.DataFrame(order_book['asks'])\n",
+							"    df = pd.merge(bids, asks, left_index=True, right_index=True)\n",
+							"    df = df.rename({\"0_x\":\"Bid Price\",\"1_x\":\"Bid Size\", \"2_x\":\"Bid Amount\",\n",
+							"                \"0_y\":\"Ask Price\",\"1_y\":\"Ask Size\", \"2_y\":\"Ask Amount\"}, axis='columns')\n",
+							"    df.insert(6, \"Product\", product)\n",
+							"    df.insert(7, \"BidTotal\", df['Bid Price'].astype(float) * df['Bid Size'].astype(float) * df['Bid Amount'].astype(float))\n",
+							"    df.insert(8, \"AskTotal\", df['Ask Price'].astype(float) * df['Ask Size'].astype(float) * df['Ask Amount'].astype(float))\n",
+							"    df.insert(9, \"PollTime\", polltime)\n",
+							"    df['BidCumSum'] = df['BidTotal'].cumsum()\n",
+							"    df['AskCumSum'] = df['AskTotal'].cumsum()\n",
+							"    df = df.where((df['AskCumSum'] <= 100_000) | (df['BidCumSum'] <= 100_000)).dropna()\n",
+							"    df = df.astype({\"Bid Price\": float, \"Bid Size\": float, \"Bid Amount\" : float, \"Ask Price\": float, \"Ask Size\": float, \"Ask Amount\" : float, \"BidTotal\" : float, \"AskTotal\" : float, \"BidCumSum\" : float, \"AskCumSum\" : float})\n",
+							"    await PushToEventHub(df)"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/production')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.2",
+				"libraryRequirements": {
+					"content": "aiohttp==3.8.4\ncoinbasepro==0.4.1",
+					"filename": "requirements.txt",
+					"time": "2023-03-06T01:04:33.8458001Z"
+				},
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"customLibraries": [
+					{
+						"name": "azure_eventhub-5.11.1-py3-none-any.whl",
+						"path": "cryptowork/libraries/azure_eventhub-5.11.1-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					},
+					{
+						"name": "azure_identity-1.12.0-py3-none-any.whl",
+						"path": "cryptowork/libraries/azure_identity-1.12.0-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		}
+	]
+}
