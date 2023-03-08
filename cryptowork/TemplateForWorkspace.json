@@ -70,10 +70,6 @@
 								"type": "NotebookReference"
 							},
 							"snapshot": true,
-							"sparkPool": {
-								"referenceName": "production",
-								"type": "BigDataPoolReference"
-							},
 							"executorSize": "Small",
 							"conf": {
 								"spark.dynamicAllocation.enabled": null,
@@ -93,8 +89,7 @@
 				"lastPublishTime": "2023-03-06T07:37:08Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/notebooks/OrderBook')]",
-				"[concat(variables('workspaceId'), '/bigDataPools/production')]"
+				"[concat(variables('workspaceId'), '/notebooks/OrderBook')]"
 			]
 		},
 		{
@@ -266,7 +261,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9e34f0ea-87b1-4594-887f-77d4cc95d803"
+						"spark.autotune.trackingId": "133bfca5-7014-4c33-b577-d69cb7104ce8"
 					}
 				},
 				"metadata": {
@@ -446,7 +441,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/production')]",
+			"name": "[concat(parameters('workspaceName'), '/RunCluster')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -455,18 +450,18 @@
 					"delayInMinutes": 15
 				},
 				"autoScale": {
-					"enabled": false,
-					"maxNodeCount": 10,
+					"enabled": true,
+					"maxNodeCount": 3,
 					"minNodeCount": 3
 				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
+				"nodeCount": 10,
+				"nodeSize": "Large",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.2",
 				"libraryRequirements": {
 					"content": "aiohttp==3.8.4\ncoinbasepro==0.4.1",
 					"filename": "requirements.txt",
-					"time": "2023-03-06T01:04:33.8458001Z"
+					"time": "2023-03-08T03:53:30.4178272Z"
 				},
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": false,
@@ -486,31 +481,6 @@
 						"type": "whl"
 					}
 				],
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RunCluster')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": true,
-					"maxNodeCount": 3,
-					"minNodeCount": 3
-				},
-				"nodeCount": 10,
-				"nodeSize": "Large",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.2",
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
 			"dependsOn": [],
