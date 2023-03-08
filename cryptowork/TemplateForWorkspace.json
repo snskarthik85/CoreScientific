@@ -242,17 +242,17 @@
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "112g",
-					"driverCores": 16,
-					"executorMemory": "112g",
-					"executorCores": 16,
-					"numExecutors": 2,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 1,
 					"runAsWorkspaceSystemIdentity": false,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "85b88e63-4871-4268-8295-b7238f545f0c"
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "5d60410d-9b5f-4cc0-954b-034d132cbd45"
 					}
 				},
 				"metadata": {
@@ -298,7 +298,7 @@
 							"import json"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -441,7 +441,7 @@
 				},
 				"autoScale": {
 					"enabled": true,
-					"maxNodeCount": 28,
+					"maxNodeCount": 3,
 					"minNodeCount": 3
 				},
 				"nodeCount": 10,
@@ -451,7 +451,7 @@
 				"libraryRequirements": {
 					"content": "aiohttp==3.8.4\ncoinbasepro==0.4.1",
 					"filename": "requirements.txt",
-					"time": "2023-03-08T04:12:07.8772276Z"
+					"time": "2023-03-08T04:15:07.0729294Z"
 				},
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": false,
