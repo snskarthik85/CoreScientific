@@ -261,7 +261,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "efadbfc4-fa58-437c-ac1a-d4b4f4714328"
+						"spark.autotune.trackingId": "24c21188-328c-4935-87d9-ee11bb82c756"
 					}
 				},
 				"metadata": {
@@ -324,6 +324,26 @@
 						},
 						"source": [
 							"coinbaseClient = cbp.PublicClient()"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Enable Arrow-based columnar data transfers\n",
+							"spark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"true\")"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -439,52 +459,6 @@
 				]
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/RunCluster')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": true,
-					"maxNodeCount": 3,
-					"minNodeCount": 3
-				},
-				"nodeCount": 10,
-				"nodeSize": "Medium",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.2",
-				"libraryRequirements": {
-					"content": "aiohttp==3.8.4\ncoinbasepro==0.4.1",
-					"filename": "requirements.txt",
-					"time": "2023-03-08T05:29:11.8596111Z"
-				},
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
-				"customLibraries": [
-					{
-						"name": "azure_eventhub-5.11.1-py3-none-any.whl",
-						"path": "cryptowork/libraries/azure_eventhub-5.11.1-py3-none-any.whl",
-						"containerName": "prep",
-						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
-						"type": "whl"
-					},
-					{
-						"name": "azure_identity-1.12.0-py3-none-any.whl",
-						"path": "cryptowork/libraries/azure_identity-1.12.0-py3-none-any.whl",
-						"containerName": "prep",
-						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
-						"type": "whl"
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/Production')]",
