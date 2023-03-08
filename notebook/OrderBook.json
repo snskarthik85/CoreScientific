@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "89c24b24-666f-48da-a08c-be1c16c38526"
+				"spark.autotune.trackingId": "6753bdfc-6c28-4c26-bf3d-1bd5f918a587"
 			}
 		},
 		"metadata": {
@@ -79,6 +79,25 @@
 				},
 				"source": [
 					"coinbaseClient = cbp.PublicClient()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Enable Arrow-based columnar data transfers\n",
+					"spark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"true\")"
 				],
 				"execution_count": null
 			},
