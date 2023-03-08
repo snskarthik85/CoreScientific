@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "77e650f9-f7b7-4048-b622-f7233b5fbe1a"
+				"spark.autotune.trackingId": "caecaf74-f190-4cd3-8c62-6d259fba9dee"
 			}
 		},
 		"metadata": {
@@ -42,8 +42,8 @@
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 10,
-				"cores": 16,
-				"memory": 112,
+				"cores": 8,
+				"memory": 56,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
@@ -62,7 +62,7 @@
 					"from datetime import datetime\n",
 					"import json"
 				],
-				"execution_count": 1
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
