@@ -252,7 +252,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bfb9bad9-51bb-41e4-9b64-aef477afe344"
+						"spark.autotune.trackingId": "9e40f3b7-8513-4852-a7d8-6685745c86e9"
 					}
 				},
 				"metadata": {
@@ -405,7 +405,7 @@
 						},
 						"source": [
 							"products = [\"BTC-USD\", \"ETH-USD\"]\n",
-							"polltime = datetime.utcnow().strftime(\"%X\")\n",
+							"polltime = datetime.utcnow().strftime(\"%d/%m/%Y %H:%M:%S\")\n",
 							"for product in products:\n",
 							"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
 							"    bids = pd.DataFrame(order_book['bids'])\n",
