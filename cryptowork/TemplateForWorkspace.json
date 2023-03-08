@@ -252,7 +252,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bb7744ed-654e-43bb-8443-d0ef0361891e"
+						"spark.autotune.trackingId": "90d37d18-6fe3-4f25-ac5a-ea526b5d4d69"
 					}
 				},
 				"metadata": {
@@ -298,7 +298,7 @@
 							"import json"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -408,7 +408,6 @@
 							"polltime = datetime.utcnow().strftime(\"%X\")\n",
 							"for product in products:\n",
 							"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
-							"    sparkDF = spark.createDataFrame(order_book) \n",
 							"    bids = pd.DataFrame(order_book['bids'])\n",
 							"    asks = pd.DataFrame(order_book['asks'])\n",
 							"    df = pd.merge(bids, asks, left_index=True, right_index=True)\n",
