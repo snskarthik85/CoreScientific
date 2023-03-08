@@ -247,7 +247,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "RunCluster",
+					"referenceName": "Production",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -261,7 +261,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8ff2d158-8db5-43a4-8c49-dd98bc7ef004"
+						"spark.autotune.trackingId": "efadbfc4-fa58-437c-ac1a-d4b4f4714328"
 					}
 				},
 				"metadata": {
@@ -275,24 +275,26 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/97a22587-99c2-4a30-9550-c894beba641f/resourceGroups/CoreScientific/providers/Microsoft.Synapse/workspaces/cryptowork/bigDataPools/RunCluster",
-						"name": "RunCluster",
+						"id": "/subscriptions/97a22587-99c2-4a30-9550-c894beba641f/resourceGroups/CoreScientific/providers/Microsoft.Synapse/workspaces/cryptowork/bigDataPools/Production",
+						"name": "Production",
 						"type": "Spark",
-						"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/RunCluster",
+						"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Production",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.2",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import coinbasepro as cbp\n",
 							"from notebookutils import mssparkutils\n",
@@ -415,6 +417,7 @@
 							"polltime = datetime.utcnow().strftime(\"%d/%m/%Y %H:%M:%S\")\n",
 							"for product in products:\n",
 							"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
+							"    spark_df = spark.createDataFrame(order_book)\n",
 							"    bids = pd.DataFrame(order_book['bids'])\n",
 							"    asks = pd.DataFrame(order_book['asks'])\n",
 							"    df = pd.merge(bids, asks, left_index=True, right_index=True)\n",
