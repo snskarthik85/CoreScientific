@@ -18,14 +18,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "792d86bd-5133-4500-950b-16f7ad0a9ba3"
+				"spark.autotune.trackingId": "03061813-680c-4400-b7ad-73298e6f0eba"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -41,14 +38,13 @@
 				"endpoint": "https://cryptowork.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/production",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.2",
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -66,7 +62,7 @@
 					"from datetime import datetime\n",
 					"import json"
 				],
-				"execution_count": 286
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -84,7 +80,7 @@
 				"source": [
 					"coinbaseClient = cbp.PublicClient()"
 				],
-				"execution_count": 287
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -153,7 +149,7 @@
 					"    await SendEventsToHub()\n",
 					"    "
 				],
-				"execution_count": 288
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -174,6 +170,7 @@
 					"polltime = datetime.utcnow().strftime(\"%X\")\n",
 					"for product in products:\n",
 					"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
+					"    sparkDF = spark.createDataFrame(order_book) \n",
 					"    bids = pd.DataFrame(order_book['bids'])\n",
 					"    asks = pd.DataFrame(order_book['asks'])\n",
 					"    df = pd.merge(bids, asks, left_index=True, right_index=True)\n",
@@ -189,7 +186,7 @@
 					"    df = df.astype({\"Bid Price\": float, \"Bid Size\": float, \"Bid Amount\" : float, \"Ask Price\": float, \"Ask Size\": float, \"Ask Amount\" : float, \"BidTotal\" : float, \"AskTotal\" : float, \"BidCumSum\" : float, \"AskCumSum\" : float})\n",
 					"    await PushToEventHub(df)"
 				],
-				"execution_count": 289
+				"execution_count": null
 			}
 		]
 	}
