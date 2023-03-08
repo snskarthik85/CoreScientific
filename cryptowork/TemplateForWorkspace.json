@@ -261,7 +261,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "24c21188-328c-4935-87d9-ee11bb82c756"
+						"spark.autotune.trackingId": "bd7e8d6f-4feb-46d4-8b09-9682b902b27a"
 					}
 				},
 				"metadata": {
@@ -324,26 +324,6 @@
 						},
 						"source": [
 							"coinbaseClient = cbp.PublicClient()"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"# Enable Arrow-based columnar data transfers\n",
-							"spark.conf.set(\"spark.sql.execution.arrow.pyspark.enabled\", \"true\")"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -437,7 +417,6 @@
 							"polltime = datetime.utcnow().strftime(\"%d/%m/%Y %H:%M:%S\")\n",
 							"for product in products:\n",
 							"    order_book = coinbaseClient.get_product_order_book(product, level = 2)\n",
-							"    spark_df = spark.createDataFrame(order_book)\n",
 							"    bids = pd.DataFrame(order_book['bids'])\n",
 							"    asks = pd.DataFrame(order_book['asks'])\n",
 							"    df = pd.merge(bids, asks, left_index=True, right_index=True)\n",
